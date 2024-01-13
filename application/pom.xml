@@ -11,4 +11,23 @@
 	
 	<artifactId>application</artifactId>
 	
+	<dependencies>
+		<dependency>
+			<groupId>com.club.fitness</groupId>
+			<artifactId>controller</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.club.fitness</groupId>
+			<artifactId>model</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.club.fitness</groupId>
+			<artifactId>repository</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.club.fitness</groupId>
+			<artifactId>service</artifactId>
+		</dependency>
+	</dependencies>
+	
 </project>
