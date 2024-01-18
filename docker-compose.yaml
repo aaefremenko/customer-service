@@ -1,0 +1,19 @@
+version: '2'
+services:
+  customer-service-db:
+    container_name: customer-service-db
+    image: postgres:14.3-alpine
+    volumes:
+      - customer-service-db-volume:/var/lib/postgresql/data
+    expose:
+      - 5432
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=alex
+      - POSTGRES_PASSWORD=123a456B
+      - POSTGRES_DB=customer_db
+      - PGDATA=/var/lib/postgresql/data/pgdata
+volumes:
+  customer-service-db-volume:
+    driver: local
