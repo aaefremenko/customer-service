@@ -60,6 +60,42 @@ public class Customer {
 							membership.update(newCustomer.membership));
 	}
 	
+	public boolean canBeActivated() {
+		return customerStatus == CustomerStatus.REGISTERED || isDeactivated();
+	}
+	
+	public boolean isDeactivated() {
+		return customerStatus == CustomerStatus.DEACTIVATED;
+	}
+	
+	public Customer activateCustomer() {
+		return new Customer(customerId,
+							username,
+							firstName,
+							lastName,
+							registrationDate,
+							LocalDateTime.now(),
+							CustomerStatus.ACTIVE,
+							address,
+							phoneNumber,
+							email,
+							membership);
+	}
+	
+	public Customer deactivateCustomer() {
+		return new Customer(customerId,
+							username,
+							firstName,
+							lastName,
+							registrationDate,
+							LocalDateTime.now(),
+							CustomerStatus.DEACTIVATED,
+							address,
+							phoneNumber,
+							email,
+							membership);
+	}
+	
 	private void validate() {
 		
 	}

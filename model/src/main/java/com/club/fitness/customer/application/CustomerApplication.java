@@ -1,11 +1,13 @@
 package com.club.fitness.customer.application;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.club.fitness.customer.exception.NotFoundException;
 import com.club.fitness.customer.exception.ValidationException;
 import com.club.fitness.customer.model.Customer;
-import com.club.fitness.customer.model.CustomerStatus;
+import com.club.fitness.customer.model.CustomerSearchCriteria;
 import com.club.fitness.customer.service.CustomerService;
 
 @Component
@@ -43,6 +45,30 @@ public class CustomerApplication {
 				.orElseThrow(NotFoundException.supplier(CUSTOMER_NOT_FOUND_BY_ID, id));
 	}
 
+	public void activateCustomerWithId(final Long id) {
+		final var customer = getCustomerById(id);
+		
+		if (!customer.canBeActivated()) {
+			return;
+		}
+		
+		customerService.saveCustomer(customer.activateCustomer());
+ 	}
+	
+	public void deactivateCustomerWithId(final Long id) {
+		final var customer = getCustomerById(id);
+		
+		if (customer.isDeactivated()) {
+			return;
+		}
+		
+		customerService.saveCustomer(customer.deactivateCustomer());
+ 	}
+	
+	public List<Customer> findAllBy(final CustomerSearchCriteria customerSearchCriteria) {
+		return customerService.findAllBy(customerSearchCriteria);
+	}
+	
 	private void checkUsernameIsUnique(final Customer customer) {
 		customerService.findCustomerByUsername(customer.getUsername())
 				.map(Customer::getUsername)
@@ -53,7 +79,7 @@ public class CustomerApplication {
 	}
 
 	private void checkCustomerIsNotDeactivated(final Customer customer) {
-		if (customer.getCustomerStatus() != CustomerStatus.DEACTIVATED) {
+		if (!customer.isDeactivated()) {
 			return;
 		}
 		throw new ValidationException(CUSTMORER_IS_DEACTIVATED, customer.getCustomerId());
