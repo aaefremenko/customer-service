@@ -1,19 +1,19 @@
 package com.club.fitness.customer.model;
 
 public class CustomerSearchCriteria {
-	private final String username;
-	private final String firstName;
-	private final String lastName;
-	private final String address;
-	private final String phoneNumber;
-	private final String email;
+	private final Username username;
+	private final FirstName firstName;
+	private final LastName lastName;
+	private final Address address;
+	private final PhoneNumber phoneNumber;
+	private final Email email;
 	
-	public CustomerSearchCriteria(final String username,
-								  final String firstName,
-								  final String lastName,
-								  final String address,
-								  final String phoneNumber,
-								  final String email) {
+	public CustomerSearchCriteria(final Username username,
+								  final FirstName firstName,
+								  final LastName lastName,
+								  final Address address,
+								  final PhoneNumber phoneNumber,
+								  final Email email) {
 		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -22,29 +22,28 @@ public class CustomerSearchCriteria {
 		this.email = email;
 	}
 
-	public String getUsername() {
+	public Username getUsername() {
 		return username;
 	}
 
-	public String getFirstName() {
+	public FirstName getFirstName() {
 		return firstName;
 	}
 
-	public String getLastName() {
+	public LastName getLastName() {
 		return lastName;
 	}
 
-	public String getAddress() {
+	public Address getAddress() {
 		return address;
 	}
 
-	public String getPhoneNumber() {
+	public PhoneNumber getPhoneNumber() {
 		return phoneNumber;
 	}
 
-	public String getEmail() {
+	public Email getEmail() {
 		return email;
 	}
-	
 	
 }

@@ -3,29 +3,32 @@ package com.club.fitness.customer.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.club.fitness.customer.exception.ValidationException;
+
 public class Customer {
 	
-	private final Long customerId;
-	private final String username;
-	private final String firstName;
-	private final String lastName;
+	private final CustomerId customerId;
+	private final Username username;
+	private final FirstName firstName;
+	private final LastName lastName;
 	private final LocalDate registrationDate;
 	private final LocalDateTime lastModifiedDate;
 	private final CustomerStatus customerStatus;
-	private final String address;
-	private final String phoneNumber;
-	private final String email;
+	private final Address address;
+	private final PhoneNumber phoneNumber;
+	private final Email email;
 	private final Membership membership;
 	
-	public Customer(final Long customerId,
-					final String username,
-					final String firstName, final String lastName,
+	public Customer(final CustomerId customerId,
+					final Username username,
+					final FirstName firstName,
+					final LastName lastName,
 					final LocalDate registrationDate,
 					final LocalDateTime lastModifiedDate,
 					final CustomerStatus customerStatus,
-					final String address,
-					final String phoneNumber,
-					final String email,
+					final Address address,
+					final PhoneNumber phoneNumber,
+					final Email email,
 					final Membership membership) {
 		this.customerId = customerId;
 		this.username = username;
@@ -43,7 +46,7 @@ public class Customer {
 	}
 	
 	public boolean isUsernameChanged(final Customer newCustomer) {
-		return !username.equals(newCustomer.username);
+		return !username.getValue().equals(newCustomer.username.getValue());
 	}
 	
 	public Customer update(final Customer newCustomer) {
@@ -60,12 +63,20 @@ public class Customer {
 							membership.update(newCustomer.membership));
 	}
 	
-	public boolean canBeActivated() {
-		return customerStatus == CustomerStatus.REGISTERED || isDeactivated();
+	public boolean isRegistered() {
+		return customerStatus == CustomerStatus.REGISTERED;
+	}
+	
+	public boolean isActive() {
+		return customerStatus == CustomerStatus.ACTIVE;
 	}
 	
 	public boolean isDeactivated() {
 		return customerStatus == CustomerStatus.DEACTIVATED;
+	}
+	
+	public boolean hasValidMembership(final LocalDate currentDate) {
+		return membership.isValid(currentDate);
 	}
 	
 	public Customer activateCustomer() {
@@ -97,22 +108,48 @@ public class Customer {
 	}
 	
 	private void validate() {
-		
+		if (username == null) {
+			throw new ValidationException("username is null");
+		}
+		if (firstName == null) {
+			throw new ValidationException("firstName is null");
+		}
+		if (lastName == null) {
+			throw new ValidationException("lastName is null");
+		}
+		if (registrationDate == null) {
+			throw new ValidationException("registrationDate is null");
+		}
+		if (lastModifiedDate == null) {
+			throw new ValidationException("lastModifiedDate is null");
+		}
+		if (customerStatus == null) {
+			throw new ValidationException("customerStatus is null");
+		}
+		if (phoneNumber == null) {
+			throw new ValidationException("phoneNumber is null");
+		}
+		if (email == null) {
+			throw new ValidationException("email is null");
+		}
+		if (membership == null) {
+			throw new ValidationException("memebership is null");
+		}
 	}
 	
-	public Long getCustomerId() {
+	public CustomerId getCustomerId() {
 		return customerId;
 	}
 	
-	public String getUsername() {
+	public Username getUsername() {
 		return username;
 	}
 	
-	public String getFirstName() {
+	public FirstName getFirstName() {
 		return firstName;
 	}
 	
-	public String getLastName() {
+	public LastName getLastName() {
 		return lastName;
 	}
 	
@@ -128,15 +165,15 @@ public class Customer {
 		return customerStatus;
 	}
 	
-	public String getAddress() {
+	public Address getAddress() {
 		return address;
 	}
 
-	public String getPhoneNumber() {
+	public PhoneNumber getPhoneNumber() {
 		return phoneNumber;
 	}
 	
-	public String getEmail() {
+	public Email getEmail() {
 		return email;
 	}
 	

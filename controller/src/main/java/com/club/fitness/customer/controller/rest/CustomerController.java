@@ -1,6 +1,7 @@
 package com.club.fitness.customer.controller.rest;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,14 @@ import com.club.fitness.customer.application.CustomerApplication;
 import com.club.fitness.customer.controller.dto.input.CustomerInputDto;
 import com.club.fitness.customer.controller.dto.output.CustomerOutputDto;
 import com.club.fitness.customer.controller.mapper.CustomerDtoMapper;
+import com.club.fitness.customer.model.Address;
+import com.club.fitness.customer.model.CustomerId;
 import com.club.fitness.customer.model.CustomerSearchCriteria;
+import com.club.fitness.customer.model.Email;
+import com.club.fitness.customer.model.FirstName;
+import com.club.fitness.customer.model.LastName;
+import com.club.fitness.customer.model.PhoneNumber;
+import com.club.fitness.customer.model.Username;
 
 @RestController
 @RequestMapping("/api/v1/customers")
@@ -60,7 +68,7 @@ public class CustomerController {
 	ResponseEntity<CustomerOutputDto> getCustomerById(final @PathVariable("customerId") Long customerId) {
 		logger.debug("Calling getCustomerById with id: {}", customerId);
 		
-		final var customer = customerApplication.getCustomerById(customerId);
+		final var customer = customerApplication.getCustomerById(new CustomerId(customerId));
 		
 		return ResponseEntity.ok(customerDtoMapper.fromModel(customer));
 	}
@@ -69,7 +77,7 @@ public class CustomerController {
 	ResponseEntity<Void> activateCustomer(final @PathVariable("customerId") Long customerId) {
 		logger.debug("Calling activateCustomer with id: {}", customerId);
 		
-		customerApplication.activateCustomerWithId(customerId);
+		customerApplication.activateCustomerWithId(new CustomerId(customerId));
 		
 		return ResponseEntity.noContent().build();
 	}
@@ -78,7 +86,7 @@ public class CustomerController {
 	ResponseEntity<Void> deactivateCustomer(final @PathVariable("customerId") Long customerId) {
 		logger.debug("Calling deactivateCustomer with id: {}", customerId);
 		
-		customerApplication.deactivateCustomerWithId(customerId);
+		customerApplication.deactivateCustomerWithId(new CustomerId(customerId));
 		
 		return ResponseEntity.noContent().build();
 	}
@@ -94,12 +102,12 @@ public class CustomerController {
 					 + "address = {}, phoneNumber = {}, email = {}",
 				username, firstName, lastName, address, phoneNumber, email);
 		
-		final var customerSearchCriteria = new CustomerSearchCriteria(username,
-																	  firstName,
-																	  lastName,
-																	  address,
-																	  phoneNumber,
-																	  email);
+		final var customerSearchCriteria = new CustomerSearchCriteria(Optional.ofNullable(username).map(Username::new).orElse(null),
+																	  Optional.ofNullable(firstName).map(FirstName::new).orElse(null),
+																	  Optional.ofNullable(lastName).map(LastName::new).orElse(null),
+																	  Optional.ofNullable(address).map(Address::new).orElse(null),
+																	  Optional.ofNullable(phoneNumber).map(PhoneNumber::new).orElse(null),
+																	  Optional.ofNullable(email).map(Email::new).orElse(null));
 		
 		return ResponseEntity.ok(customerApplication.findAllBy(customerSearchCriteria)
 													.stream()

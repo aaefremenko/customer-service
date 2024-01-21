@@ -7,7 +7,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.club.fitness.customer.model.Customer;
+import com.club.fitness.customer.model.CustomerId;
 import com.club.fitness.customer.model.CustomerSearchCriteria;
+import com.club.fitness.customer.model.Username;
 import com.club.fitness.customer.repository.entity.CustomerEntity;
 import com.club.fitness.customer.repository.jpa.CustomerRepository;
 import com.club.fitness.customer.repository.mapper.CustomerEntityMapper;
@@ -34,13 +36,13 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public Optional<Customer> findCustomerByUsername(final String username) {
-		return customerRepository.findOneByUsername(username).map(customerEntityMapper::fromEntity);
+	public Optional<Customer> findCustomerByUsername(final Username username) {
+		return customerRepository.findOneByUsername(username.getValue()).map(customerEntityMapper::fromEntity);
 	}
 
 	@Override
-	public Optional<Customer> findCustomerById(final Long id) {
-		return customerRepository.findById(id).map(customerEntityMapper::fromEntity);
+	public Optional<Customer> findCustomerById(final CustomerId id) {
+		return customerRepository.findById(id.getValue()).map(customerEntityMapper::fromEntity);
 	}
 	
 
@@ -49,28 +51,34 @@ public class CustomerServiceImpl implements CustomerService {
 		Specification<CustomerEntity> spec = null;
 		
 		if (customerSearchCriteria.getUsername() != null) {
-			spec = (spec == null) ? Specification.where(CustomerSpecifications.hasUsername(customerSearchCriteria.getUsername())) 
-					: spec.and(CustomerSpecifications.hasUsername(customerSearchCriteria.getUsername()));
+			spec = (spec == null)
+					? Specification.where(CustomerSpecifications.hasUsername(customerSearchCriteria.getUsername().getValue())) 
+					: spec.and(CustomerSpecifications.hasUsername(customerSearchCriteria.getUsername().getValue()));
 		}
 		if (customerSearchCriteria.getFirstName() != null) {
-			spec = (spec == null) ? Specification.where(CustomerSpecifications.hasFirstName(customerSearchCriteria.getFirstName())) 
-					: spec.and(CustomerSpecifications.hasFirstName(customerSearchCriteria.getFirstName()));
+			spec = (spec == null)
+					? Specification.where(CustomerSpecifications.hasFirstName(customerSearchCriteria.getFirstName().getValue())) 
+					: spec.and(CustomerSpecifications.hasFirstName(customerSearchCriteria.getFirstName().getValue()));
 		}
 		if (customerSearchCriteria.getLastName() != null) {
-			spec = (spec == null) ? Specification.where(CustomerSpecifications.hasLastName(customerSearchCriteria.getLastName()))
-					: spec.and(CustomerSpecifications.hasLastName(customerSearchCriteria.getLastName()));
+			spec = (spec == null)
+					? Specification.where(CustomerSpecifications.hasLastName(customerSearchCriteria.getLastName().getValue()))
+					: spec.and(CustomerSpecifications.hasLastName(customerSearchCriteria.getLastName().getValue()));
 		}
 		if (customerSearchCriteria.getAddress() != null) {
-			spec = (spec == null) ? Specification.where(CustomerSpecifications.hasAddress(customerSearchCriteria.getAddress()))
-					: spec.and(CustomerSpecifications.hasAddress(customerSearchCriteria.getAddress()));
+			spec = (spec == null)
+					? Specification.where(CustomerSpecifications.hasAddress(customerSearchCriteria.getAddress().getValue()))
+					: spec.and(CustomerSpecifications.hasAddress(customerSearchCriteria.getAddress().getValue()));
 		}
 		if (customerSearchCriteria.getPhoneNumber() != null) {
-			spec = (spec == null) ? Specification.where(CustomerSpecifications.hasPhoneNumber(customerSearchCriteria.getPhoneNumber()))
-					: spec.and(CustomerSpecifications.hasPhoneNumber(customerSearchCriteria.getPhoneNumber()));
+			spec = (spec == null)
+					? Specification.where(CustomerSpecifications.hasPhoneNumber(customerSearchCriteria.getPhoneNumber().getValue()))
+					: spec.and(CustomerSpecifications.hasPhoneNumber(customerSearchCriteria.getPhoneNumber().getValue()));
 		}
 		if (customerSearchCriteria.getEmail() != null) {
-			spec = (spec == null) ? Specification.where(CustomerSpecifications.hasEmail(customerSearchCriteria.getEmail()))
-					: spec.and(CustomerSpecifications.hasEmail(customerSearchCriteria.getEmail()));
+			spec = (spec == null)
+					? Specification.where(CustomerSpecifications.hasEmail(customerSearchCriteria.getEmail().getValue()))
+					: spec.and(CustomerSpecifications.hasEmail(customerSearchCriteria.getEmail().getValue()));
 		}
 		
 		return customerRepository.findAll(spec)

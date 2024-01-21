@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   customer-service-db:
     container_name: customer-service-db
@@ -14,6 +14,14 @@ services:
       - POSTGRES_PASSWORD=123a456B
       - POSTGRES_DB=customer_db
       - PGDATA=/var/lib/postgresql/data/pgdata
+  customer-service:
+    depends_on:
+      - customer-service-db
+    build:
+      context: ./application
+    container_name: customer-service
+    ports:
+      - "8090:8090"
 volumes:
   customer-service-db-volume:
     driver: local
