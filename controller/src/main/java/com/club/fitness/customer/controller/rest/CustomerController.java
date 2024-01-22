@@ -28,8 +28,13 @@ import com.club.fitness.customer.model.LastName;
 import com.club.fitness.customer.model.PhoneNumber;
 import com.club.fitness.customer.model.Username;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/v1/customers")
+@Tag(name = "Клиенты", description = "Методы для работы с клиентами")
 public class CustomerController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
@@ -44,6 +49,7 @@ public class CustomerController {
 	}
 	
 	@PostMapping
+	@Operation(summary = "Создание нового клиента")
 	ResponseEntity<CustomerOutputDto> createCustomer(final @RequestBody CustomerInputDto customerInputDto) {
 		logger.debug("Calling createCustomer with params: {}", customerInputDto);
 		
@@ -54,6 +60,7 @@ public class CustomerController {
 	}
 	
 	@PutMapping("/{customerId}")
+	@Operation(summary = "Обновление информации о клиенте")
 	ResponseEntity<CustomerOutputDto> updateCustomer(final @PathVariable("customerId") Long customerId,
 													 final @RequestBody CustomerInputDto customerInputDto) {
 		logger.debug("Calling updateCustomer with id: {} and params: {}", customerId, customerInputDto);
@@ -65,7 +72,11 @@ public class CustomerController {
 	}
 	
 	@GetMapping("/{customerId}")
-	ResponseEntity<CustomerOutputDto> getCustomerById(final @PathVariable("customerId") Long customerId) {
+	@Operation(summary = "Получение информации о клиенте по его уникальному идентификатору")
+	ResponseEntity<CustomerOutputDto> getCustomerById(
+			@PathVariable("customerId")
+			@Parameter(description = "Уникальный идентификатор клиента")
+			final Long customerId) {
 		logger.debug("Calling getCustomerById with id: {}", customerId);
 		
 		final var customer = customerApplication.getCustomerById(new CustomerId(customerId));
@@ -74,7 +85,11 @@ public class CustomerController {
 	}
 	
 	@PutMapping("/{customerId}/activate")
-	ResponseEntity<Void> activateCustomer(final @PathVariable("customerId") Long customerId) {
+	@Operation(summary = "Активация клиента")
+	ResponseEntity<Void> activateCustomer(
+			@PathVariable("customerId")
+			@Parameter(description = "Уникальный идентификатор клиента")
+			final Long customerId) {
 		logger.debug("Calling activateCustomer with id: {}", customerId);
 		
 		customerApplication.activateCustomerWithId(new CustomerId(customerId));
@@ -83,7 +98,11 @@ public class CustomerController {
 	}
 	
 	@PutMapping("/{customerId}/deactivate")
-	ResponseEntity<Void> deactivateCustomer(final @PathVariable("customerId") Long customerId) {
+	@Operation(summary = "Деактивация клиента")
+	ResponseEntity<Void> deactivateCustomer(
+			@PathVariable("customerId")
+			@Parameter(description = "Уникальный идентификатор клиента")
+			final Long customerId) {
 		logger.debug("Calling deactivateCustomer with id: {}", customerId);
 		
 		customerApplication.deactivateCustomerWithId(new CustomerId(customerId));
@@ -92,12 +111,26 @@ public class CustomerController {
 	}
 	
 	@GetMapping("/search")
-	ResponseEntity<List<CustomerOutputDto>> searchCustomers(final @RequestParam(name = "username", required = false) String username,
-															final @RequestParam(name = "firstName", required = false) String firstName,
-															final @RequestParam(name = "lastName", required = false) String lastName,
-															final @RequestParam(name = "address", required = false) String address,
-															final @RequestParam(name = "phoneNumber", required = false) String phoneNumber,
-															final @RequestParam(name = "email", required = false) String email) {
+	@Operation(summary = "Поиск клиентов по различным критериям")
+	ResponseEntity<List<CustomerOutputDto>> searchCustomers(
+			@RequestParam(name = "username", required = false)
+			@Parameter(description = "Уникальное имя пользователя")
+			final String username,
+			@RequestParam(name = "firstName", required = false)
+			@Parameter(description = "Имя")
+			final String firstName,
+			@RequestParam(name = "lastName", required = false)
+			@Parameter(description = "Фамилия")
+			final String lastName,
+			@RequestParam(name = "address", required = false)
+			@Parameter(description = "Адрес")
+			final String address,
+			@RequestParam(name = "phoneNumber", required = false)
+			@Parameter(description = "Номер телефона")
+			final String phoneNumber,
+			@RequestParam(name = "email", required = false)
+			@Parameter(description = "Электронная почта")
+			final String email) {
 		logger.debug("Calling searchCustomers with params: username = {}, firstName = {}, lastName = {},"
 					 + "address = {}, phoneNumber = {}, email = {}",
 				username, firstName, lastName, address, phoneNumber, email);

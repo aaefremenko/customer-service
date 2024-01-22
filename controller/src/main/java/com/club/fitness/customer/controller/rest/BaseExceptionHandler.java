@@ -4,19 +4,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.club.fitness.customer.controller.dto.output.ErrorDto;
 import com.club.fitness.customer.exception.NotFoundException;
 import com.club.fitness.customer.exception.ValidationException;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class BaseExceptionHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(BaseExceptionHandler.class);
 
 	@ExceptionHandler(NotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public ResponseEntity<ErrorDto> handleNotFoundException(final NotFoundException e) {
 		logger.error(e.getMessage(), e);
 
@@ -27,6 +29,7 @@ public class BaseExceptionHandler {
 	}
 
 	@ExceptionHandler(ValidationException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity<ErrorDto> handleValidationException(final ValidationException e) {
 		logger.error(e.getMessage(), e);
 
@@ -37,6 +40,7 @@ public class BaseExceptionHandler {
 	}
 
 	@ExceptionHandler(RuntimeException.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public ResponseEntity<ErrorDto> handleCommonRuntimeException(final RuntimeException e) {
 		logger.error(e.getMessage(), e);
 
