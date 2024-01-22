@@ -10,6 +10,7 @@ import com.club.fitness.customer.exception.ValidationException;
 import com.club.fitness.customer.model.Customer;
 import com.club.fitness.customer.model.CustomerId;
 import com.club.fitness.customer.model.CustomerSearchCriteria;
+import com.club.fitness.customer.service.CustomerEventService;
 import com.club.fitness.customer.service.CustomerService;
 
 @Component
@@ -21,15 +22,21 @@ public class CustomerApplication {
 	private static final String CUSTOMER_CAN_NOT_BE_ACTIVATED = "Customer with id: {0} cannot be activated";
 
 	private final CustomerService customerService;
+	private final CustomerEventService customerEventService;
 
-	public CustomerApplication(final CustomerService customerService) {
+	public CustomerApplication(final CustomerService customerService,
+							   final CustomerEventService customerEventService) {
 		this.customerService = customerService;
+		this.customerEventService = customerEventService;
 	}
 
 	public Customer createCustomer(final Customer customer) {
 		checkUsernameIsUnique(customer);
 
-		return customerService.saveCustomer(customer);
+		final var savedCustomer = customerService.saveCustomer(customer);
+		customerEventService.sendCustomerCreatedEvent(savedCustomer);
+		
+		return savedCustomer;
 	}
 
 	public Customer updateCustomer(final Customer customer) {
@@ -40,7 +47,10 @@ public class CustomerApplication {
 			checkUsernameIsUnique(customer);
 		}
 		
-		return customerService.saveCustomer(oldCustomer.update(customer));
+		final var savedCustomer = customerService.saveCustomer(oldCustomer.update(customer));
+		customerEventService.sendCustomerUpdatedEvent(savedCustomer);
+		
+		return savedCustomer;
 	}
 
 	public Customer getCustomerById(final CustomerId id) {
@@ -57,7 +67,8 @@ public class CustomerApplication {
 		
 		checkCustomerCanBeActivated(customer);
 		
-		customerService.saveCustomer(customer.activateCustomer());
+		final var savedCustomer = customerService.saveCustomer(customer.activateCustomer());
+		customerEventService.sendCustomerActivatedEvent(savedCustomer);
  	}
 	
 	public void deactivateCustomerWithId(final CustomerId id) {
@@ -67,7 +78,8 @@ public class CustomerApplication {
 			return;
 		}
 		
-		customerService.saveCustomer(customer.deactivateCustomer());
+		final var savedCustomer = customerService.saveCustomer(customer.deactivateCustomer());
+		customerEventService.sendCustomerDeactivatedEvent(savedCustomer);
  	}
 	
 	public List<Customer> findAllBy(final CustomerSearchCriteria customerSearchCriteria) {

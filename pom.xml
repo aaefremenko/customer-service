@@ -20,6 +20,7 @@
 		<module>model</module>
 		<module>repository</module>
 		<module>service</module>
+		<module>kafka</module>
 	</modules>
 
 	<properties>
@@ -51,6 +52,11 @@
 			<dependency>
 				<groupId>com.club.fitness</groupId>
 				<artifactId>service</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.club.fitness</groupId>
+				<artifactId>kafka</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
