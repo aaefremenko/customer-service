@@ -30,3 +30,6 @@ tmp/
 local.properties
 .loadpath
 .factorypath
+
+# Logs
+*.log
