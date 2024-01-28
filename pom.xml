@@ -30,6 +30,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<postgresql.version>42.7.1</postgresql.version>
+		<spring-cloud-sleuth.version>3.1.10</spring-cloud-sleuth.version>
 	</properties>
 
 	<dependencyManagement>
@@ -63,6 +64,16 @@
 				<groupId>org.postgresql</groupId>
 				<artifactId>postgresql</artifactId>
 				<version>${postgresql.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-starter-sleuth</artifactId>
+				<version>${spring-cloud-sleuth.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-sleuth-zipkin</artifactId>
+				<version>${spring-cloud-sleuth.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
