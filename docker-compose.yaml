@@ -16,6 +16,7 @@ services:
       - PGDATA=/var/lib/postgresql/data/pgdata
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -23,6 +24,7 @@ services:
       - "22181:2181"
   kafka:
     image: confluentinc/cp-kafka:latest
+    container_name: kafka
     depends_on:
       - zookeeper
     ports:
@@ -37,18 +39,42 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
   zipkin:
     image: openzipkin/zipkin
+    container_name: zipkin
     ports:
      - "9411:9411"
   customer-service:
-    depends_on:
-      - customer-service-db
-      - kafka
-      - zipkin
     build:
       context: ./application
     container_name: customer-service
     ports:
       - "8090:8090"
+    depends_on:
+      - customer-service-db
+      - kafka
+      - zipkin
+  prometheus:
+    image: prom/prometheus:v2.37.1
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - customer-service
+  grafana:
+    image: grafana/grafana-oss:8.5.2
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    links:
+      - prometheus:prometheus
+    volumes:
+      - ./grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITU_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=password
 volumes:
   customer-service-db-volume:
     driver: local

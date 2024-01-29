@@ -28,7 +28,7 @@ public class CustomerEventProducer {
 		future.addCallback(event -> logger.debug("sending customer event: {} is successfull", event.getProducerRecord().value()),
 						ex -> {
 							logger.debug("sending customer event: {} is failure. {}", customerEvent, ex);
-							throw new RuntimeException("sending customer event: " + customerEvent + " is failure.");
+//							throw new RuntimeException("sending customer event: " + customerEvent + " is failure.");
 						});
 	}
 	
