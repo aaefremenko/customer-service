@@ -6,6 +6,7 @@ import com.club.fitness.customer.exception.ValidationException;
 
 public class PhoneNumber {
 	
+	
 	private static final Pattern PATTERN = Pattern.compile("^\\+\\d{9,15}");
 	
 	private final String value;

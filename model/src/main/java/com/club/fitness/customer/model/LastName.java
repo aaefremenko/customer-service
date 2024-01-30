@@ -6,7 +6,7 @@ import com.club.fitness.customer.exception.ValidationException;
 
 public class LastName {
 	
-	private static final Pattern PATTERN = Pattern.compile("^[A-Za-z][A-Za-z-]{1,64}$");
+	private static final Pattern PATTERN = Pattern.compile("^[A-Za-z][A-Za-z-]{1,63}$");
 	
 	private final String value;
 	
